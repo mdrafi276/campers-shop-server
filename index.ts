@@ -21,12 +21,12 @@ async function main() {
         // connect to the database
         await mongoose.connect(process?.env?.DB_URL as string);
 
-        // start the express server
+
         app.listen(port, () => {
             console.log(`app is listening on port ${port}`);
         });
     } catch (err) {
-        // log any errors that occur during startup
+
         console.log(err);
     }
 }
