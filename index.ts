@@ -99,3 +99,42 @@ app.get("/products/:id", async (req, res) => {
     });
 });
 
+app.put("/products/:id", async (req, res) => {
+    const id = req.params.id;
+    const productData = req.body;
+
+    const result = await Product.findByIdAndUpdate(id, productData, {
+        new: true,
+    });
+    res.json({
+        success: true,
+        message: "Product updated successfully!",
+        data: result,
+    });
+});
+
+app.delete("/products/:id", async (req, res) => {
+    const id = req.params.id;
+    const result = await Product.findByIdAndDelete(id);
+    res.json({
+        success: true,
+        message: "Product deleted successfully!",
+        data: result,
+    });
+});
+
+app.use((err, req, res, next) => {
+    res.status(500).json({
+        success: false,
+        message: err?.message || "Internal Server Error",
+        error: err,
+    });
+});
+
+app.use((req: Request, res: Response, next) => {
+    return res.status(401).json({
+        success: false,
+        statusCode: 404,
+        message: "Not Found",
+    });
+});
