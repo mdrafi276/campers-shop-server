@@ -82,3 +82,20 @@ app.post("/products", async (req, res) => {
     });
 });
 
+app.get("/products", async (req, res) => {
+    const result = await Product.find();
+    res.json({
+        success: true,
+        message: "Products retrieved successfully!",
+        data: result,
+    });
+});
+app.get("/products/:id", async (req, res) => {
+    const result = await Product.findById(req.params.id);
+    res.json({
+        success: true,
+        message: "Product is retrieved successfully!",
+        data: result,
+    });
+});
+
