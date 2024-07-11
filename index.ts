@@ -32,3 +32,53 @@ async function main() {
 }
 main();
 
+
+const ProductSchema = new Schema({
+    name: {
+        type: String,
+        required: true,
+    },
+    image: {
+        type: String,
+        required: true,
+    },
+    description: {
+        type: String,
+        required: true,
+    },
+    category: {
+        type: String,
+        required: true,
+    },
+    price: {
+        type: Number,
+        required: true,
+    },
+    quantity: {
+        type: Number,
+        required: true,
+    },
+    stock: {
+        type: Boolean,
+        default: true,
+    },
+    ratings: {
+        type: Number,
+        default: 0,
+    },
+});
+
+
+const Product = model("Product", ProductSchema);
+
+app.post("/products", async (req, res) => {
+    const product = req.body;
+    const result = await Product.create(product);
+
+    res.send({
+        success: true,
+        message: "Product created successfully!",
+        data: result,
+    });
+});
+
