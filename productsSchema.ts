@@ -1,6 +1,6 @@
 import { Schema } from "mongoose";
 
-export const newSchema = new Schema({
+export const productsSchema = new Schema({
     name: {
         type: String,
         required: true,
@@ -29,8 +29,9 @@ export const newSchema = new Schema({
         type: Boolean,
         default: true,
     },
-    ratings: {
+    rating: {
         type: Number,
-        default: 0,
+        required: true,
     },
 });
+

@@ -1,11 +1,10 @@
 # campers-shop-server System Backend 
 
 ## 🤖 Introduction
-This is the backend for a Car Rental Reservation System. It handles CRUD operations for cars, bookings, user authentication, and authorization. The project is built with Node.js, Express.js, TypeScript, and MongoDB.
-
+Discover the ultimate destination for camping gear at advencture shop! Our e-commerce site boasts a user-friendly design and an attractive layout, making it easy and enjoyable to browse through our wide range of products. From essential equipment to fun gadgets, we have everything to enhance your outdoor adventure.
 ## 🔗 Live URL
 
-[Car Rental Reservation System](https://car-rental-reservation-system-beryl.vercel.app/)
+[Advencture shop](camperes-shop-project-server.vercel.app)
 
 
 ## Technologies Used
@@ -14,92 +13,67 @@ This is the backend for a Car Rental Reservation System. It handles CRUD operati
 - TypeScript
 - MongoDB
 - Mongoose
+- cors
+- **dotenv**
 
-## Features
-- User Authentication and Authorization (JWT-based)
-- CRUD Operations for Cars
-- Booking System for Renting Cars
-- Middleware for Error Handling
-- Input Validation using Zod
-- Transaction and Rollback (if necessary)
+## 🔋 Features
 
-- **Order Management**
-  - Create a new order
-  - Retrieve all orders
-  - Retrieve orders by user email
-  - Update inventory when an order is created
-
-## API Endpoints
-
-###  Authentication
-
--  **Sign Up**
-
-  - Endpoint: `/api/auth/signup`
-  - Method: `POST`
-
-- **Sign In**
-
-  - Endpoint: `/api/auth/signin`
-  - Method: `POST`
-
-###  Car Management
-
-- **Create a Car (Only accessible to the Admin)**
-
-  - Endpoint: `/api/cars`
-  - Method: `POST`
-
-- **Get All Cars**
-
-  - Endpoint: `/api/cars`
-  - Method: `GET`
-
-- **Get A Car**
-
-  - Endpoint: `/api/cars/:id`
-  - Method: `GET`
-
-- **Update A Car (Only Accessible to the Admin)**
-
-  - Endpoint: `/api/cars/:id`
-  - Method: `PUT`
-
-- **Delete A Car (Only Accessible to the Admin)**
-  - Endpoint: `/api/cars/:id`
-  - Method: `DELETE` [SOFT DELETE]
-
-###  Booking Management
-
-- **Get All Bookings (Accessible to the Admin)**
-
-  - Endpoint: `/api/bookings`
-  - Method: `GET`
-  - **Query Parameters:**
-
-    - `carId`: ID of the car for which availability needs to be checked.
-    - `date`: The specific date for which availability needs to be checked
-      (format: YYYY-MM-DD).
-
-- **Book a Car (Only Accessible to the User)**
-  - Endpoint: `/api/bookings`
-  - Method: `POST`
-- **Get User's Bookings (Only Accessible To the User)**
-
-  - Endpoint: `/api/bookings/my-bookings`
-  - Method: `GET`
-
-- **Return The Car (Only Accessible To Admin)**
-  - Endpoint: `/api/cars/return`
-  - Method: `PUT`
+- 🌟 **User-friendly and visually appealing interface**
+- 🏠 **Homepage**
+  - Hero section
+  - Best-selling products
+  - Categories
+  - Featured products
+  - Unique sections like testimonials
+- 🛍️ **Products Page**
+  - Search functionality
+  - Filter options
+  - Sorting features
+- 🔍 **Detailed Product Page**
+  - Product information
+  - Ratings
+  - Image magnifier
+- 📦 **Product Management**
+  - Create products
+  - Update products
+  - Delete products
+- 🛒 **Cart Page**
+  - Quantity controls
+  - Remove product button
+  - Dynamic pricing details
+- 💳 **Checkout Page**
+  - User details form
+  - Payment methods
+- 📄 **About Us Page**
+  - Contact information
+  - Map
+  - Social media links
+  - Mission statement
+  - Team members
+- 📱 **Responsive design and state management using Redux**
+- ⚡ **Fast loading times and intuitive navigation**
+- ♿ **Accessibility features and interactive elements**
 
 
+## Usage
+
+1. **Homepage:** Visit our homepage to delve into our hero section, uncover our top-selling items, explore diverse categories, discover featured products, and indulge in exclusive content such as video blogs and customer testimonials
+
+2. **Products Page:**Utilize our search bar to locate products by name or description. Apply filters based on categories and price range, and conveniently sort products by price
+
+3. **Product Details Page:** Access comprehensive details about each product, such as its name, price, current stock quantity, detailed description, category classification, customer ratings, and multiple images. Take advantage of the image magnifier feature to examine products up close.
+
+4. **Cart Page:** Easily manage your shopping cart by modifying quantities, removing products, and reviewing real-time pricing information. Proceed to checkout promptly if your selected products are in stock.
+
+5. **Checkout Page:**Complete your purchase by entering your details and selecting a payment method. Opt for Cash on Delivery or utilize Stripe (optional) for secure payments
+
+6. **About Us Page:** Locate our contact information, find our map location, access our social media links, explore our mission statement, and read bios of our team members
  **Clone the repository**
 
    ```sh
-   git clone https://github.com/mdrafi276/Car-Rental-Reservation-System-Backend.git
+   git clone https://github.com/mdrafi276/campers-shop-server.git
 
-   cd Car-Rental-Reservation-System-Backend
+   cd campers-shop-server
   
 ```
 📦 Install Dependencies
@@ -133,17 +107,3 @@ $ npm run start:prod
 The server should be running on http://localhost:5000.
 
 
-<!-- . -->
-
-
-## Ensure the code adheres to a consistent style by running:
-
-```TYPESCRIPT
-npm run lint
-```
-# LINTING FIX
-## Fix the code by running:
-```TYPESCRIPT
-npm run lint:fix
-
-```

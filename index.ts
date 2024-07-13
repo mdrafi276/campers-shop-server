@@ -4,7 +4,7 @@ import cors from "cors";
 const app = express();
 const port = process.env.PORT || 5000;
 import dotenv from "dotenv";
-import { newSchema } from "./newSchema";
+import { productsSchema } from "./productsSchema";
 
 dotenv.config();
 
@@ -33,12 +33,37 @@ async function main() {
 }
 main();
 
+// schema
+const ProductSchema = productsSchema;
 
-const ProductSchema = newSchema;
+const OrderSchema = new Schema({
+    name: {
+        type: String,
+        required: true,
+    },
+    email: {
+        type: String,
+        required: true,
+    },
+    phone: {
+        type: String,
+        required: true,
+    },
+    address: {
+        type: String,
+        required: true,
+    },
+    paymentMethod: {
+        type: String,
+        required: true,
+    },
+});
 
 
 const Product = model("Product", ProductSchema);
 const bestProduct = model("bestProduct", ProductSchema);
+const Order = model("Order", OrderSchema);
+
 
 app.post("/products", async (req, res) => {
     const product = req.body;
@@ -52,12 +77,43 @@ app.post("/products", async (req, res) => {
 });
 
 app.get("/products", async (req, res) => {
-    const result = await Product.find();
-    res.json({
-        success: true,
-        message: "Products retrieved successfully!",
-        data: result,
-    });
+    const { searchValue, category, minPrice, maxPrice, sort } = req.query;
+    const filter: any = {};
+
+    if (searchValue) {
+        filter.$or = [
+            { name: { $regex: searchValue, $options: "i" } },
+            { description: { $regex: searchValue, $options: "i" } },
+        ];
+    }
+    if (category) {
+        filter.category = category;
+    }
+    if (minPrice && maxPrice) {
+        filter.price = { $gte: minPrice, $lte: maxPrice };
+    } else if (minPrice) {
+        filter.price = { $gte: minPrice };
+    } else if (maxPrice) {
+        filter.price = { $lte: maxPrice };
+    }
+    let sortOption: any = {};
+
+    if (sort === "asc") {
+        sortOption.price = 1;
+    } else if (sort === "desc") {
+        sortOption.price = -1;
+    }
+
+    try {
+        const result = await Product.find(filter).sort(sortOption);
+        res.status(200).json({
+            success: true,
+            message: "Products retrieved successfully!",
+            data: result,
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message, data: [] });
+    }
 });
 app.get("/best-products", async (req, res) => {
     const result = await Product.find();
@@ -77,17 +133,23 @@ app.get("/products/:id", async (req, res) => {
 });
 
 app.put("/products/:id", async (req, res) => {
-    const id = req.params.id;
-    const productData = req.body;
-
-    const result = await Product.findByIdAndUpdate(id, productData, {
-        new: true,
-    });
-    res.json({
-        success: true,
-        message: "Product updated successfully!",
-        data: result,
-    });
+    try {
+        const id = req.params.id;
+        const productData = req.body;
+        let result = await Product.findByIdAndUpdate(id, productData, {
+            new: true,
+        });
+        res.json({
+            success: true,
+            message: "Product updated successfully!",
+            data: result,
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "An error occurred while updating the product.",
+        });
+    }
 });
 
 app.delete("/products/:id", async (req, res) => {
@@ -98,6 +160,50 @@ app.delete("/products/:id", async (req, res) => {
         message: "Product deleted successfully!",
         data: result,
     });
+});
+
+app.post("/orders", async (req, res) => {
+    const paymentData = req.body;
+    const result = await Order.create(paymentData);
+    res.json({
+        success: true,
+        message: "Order successful!",
+        data: result,
+    });
+});
+
+app.put("/products", async (req, res) => {
+    try {
+        const updatedProductData = req.body;
+        const updatedResults = await Promise.all(
+            updatedProductData.map(async (product) => {
+                const existingProduct = await Product.findById(product._id);
+
+                if (!existingProduct) {
+
+                    return null;
+                }
+                existingProduct.quantity -= product.quantity;
+
+                if (existingProduct.quantity <= 0) {
+                    existingProduct.stock = false;
+                }
+
+                return await existingProduct.save();
+            })
+        );
+        res.json({
+            success: true,
+            message: "Products quantity updated successfully!",
+            data: updatedResults,
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "An error occurred while updating product quantities.",
+        });
+    }
 });
 
 app.use((err, req, res, next) => {
