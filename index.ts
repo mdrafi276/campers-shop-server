@@ -1,10 +1,10 @@
 import express, { Request, Response } from "express";
-import mongoose, { model, Schema } from "mongoose";
+import mongoose, { model, Schema, Document } from "mongoose";
+
 import cors from "cors";
 const app = express();
 const port = process.env.PORT || 5000;
 import dotenv from "dotenv";
-import { productsSchema } from "./productsSchema";
 
 dotenv.config();
 
@@ -33,10 +33,69 @@ async function main() {
 }
 main();
 
-// schema
-const ProductSchema = productsSchema;
 
-const OrderSchema = new Schema({
+// products.schema.ts
+
+
+export interface Product extends Document {
+    name: string;
+    image: string;
+    description: string;
+    category: string;
+    price: number;
+    quantity: number;
+    stock: boolean;
+    rating: number;
+}
+
+export const productsSchema = new Schema<Product>({
+    name: {
+        type: String,
+        required: true,
+    },
+    image: {
+        type: String,
+        required: true,
+    },
+    description: {
+        type: String,
+        required: true,
+    },
+    category: {
+        type: String,
+        required: true,
+    },
+    price: {
+        type: Number,
+        required: true,
+    },
+    quantity: {
+        type: Number,
+        required: true,
+    },
+    stock: {
+        type: Boolean,
+        default: true,
+    },
+    rating: {
+        type: Number,
+        required: true,
+    },
+});
+
+
+// order.schema.ts
+
+
+export interface Order extends Document {
+    name: string;
+    email: string;
+    phone: string;
+    address: string;
+    paymentMethod: string;
+}
+
+export const OrderSchema = new Schema<Order>({
     name: {
         type: String,
         required: true,
@@ -59,9 +118,67 @@ const OrderSchema = new Schema({
     },
 });
 
+// schema
+// const ProductSchema = new Schema({
+//     name: {
+//         type: String,
+//         required: true,
+//     },
+//     image: {
+//         type: String,
+//         required: true,
+//     },
+//     description: {
+//         type: String,
+//         required: true,
+//     },
+//     category: {
+//         type: String,
+//         required: true,
+//     },
+//     price: {
+//         type: Number,
+//         required: true,
+//     },
+//     quantity: {
+//         type: Number,
+//         required: true,
+//     },
+//     stock: {
+//         type: Boolean,
+//         default: true,
+//     },
+//     rating: {
+//         type: Number,
+//         required: true,
+//     },
+// });
+// const OrderSchema = new Schema({
+//     name: {
+//         type: String,
+//         required: true,
+//     },
+//     email: {
+//         type: String,
+//         required: true,
+//     },
+//     phone: {
+//         type: String,
+//         required: true,
+//     },
+//     address: {
+//         type: String,
+//         required: true,
+//     },
+//     paymentMethod: {
+//         type: String,
+//         required: true,
+//     },
+// });
 
-const Product = model("Product", ProductSchema);
-const bestProduct = model("bestProduct", ProductSchema);
+
+const Product = model("Product", productsSchema);
+const bestProduct = model("bestProduct", productsSchema);
 const Order = model("Order", OrderSchema);
 
 
@@ -112,7 +229,7 @@ app.get("/products", async (req, res) => {
             data: result,
         });
     } catch (error) {
-        res.status(500).json({ success: false, message: error.message, data: [] });
+        res.status(500).json({ success: false, message: "something went wrong", data: [] });
     }
 });
 app.get("/best-products", async (req, res) => {
@@ -176,7 +293,7 @@ app.put("/products", async (req, res) => {
     try {
         const updatedProductData = req.body;
         const updatedResults = await Promise.all(
-            updatedProductData.map(async (product) => {
+            updatedProductData.map(async (product: any) => {
                 const existingProduct = await Product.findById(product._id);
 
                 if (!existingProduct) {
